@@ -71,7 +71,7 @@
   (ite (< x y) x y))
 
 (define-fun Tf_lower ((l Real) (u Real)) Real
-(ite (< u 0) (* u u) (min 0 (max (* l l) (* l (* l l))))); Your code here
+(ite (< u 0) (* u u) (ite (< l 0) 0 (max (* l l) (* l (* l l))))); Your code here
 )
 (define-fun Tf_upper ((l Real) (u Real)) Real
 (max (* l l) (max (* u u) (* u (* u u)))); Your code here

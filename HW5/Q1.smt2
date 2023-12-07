@@ -4,23 +4,27 @@
 (declare-const i Int)
 (declare-const temp Int)
 
-(define-fun Funtemp ((e1 Int)) Int (+ e1 0))
-(define-fun Funx ((e1 Int)) Int(+ e1 0))
-(define-fun Funy ((e1 Int)) Int(+ e1 0))
-(define-fun Funz ((e1 Int)) Int(+ e1 0))
-(define-fun Funi ((e1 Int)) Int(+ e1 0))
+(push) ; initialize
+(assert (= 1 x))
+(assert (= 2 y))
+(assert (= 3 z))
+(assert (= 0 i))
 
-(assert (and
-    (= (Funx 1) x)
-    (= (Funy 2) y)
-    (= (Funz 3) z)
-    (= (Funi 0) i)
-    
-    (< i 10)
-    (<= i 10)
-    (> i 10)
-    (not (= x y))
-))
-
-
+(assert (< i 10))
+(assert (<= i 10))
+(assert (> i 10))
+(assert (not (= x y)))
 (check-sat)
+(pop) ; remove the assertions
+(push) ; last iteration
+(assert (= 2 x))
+(assert (= 3 y))
+(assert (= 1 z))
+(assert (= 11 i))
+
+(assert (< i 10))
+(assert (<= i 10))
+(assert (> i 10))
+(assert (not (= x y)))
+(check-sat)
+(pop) ; remove the assertions

@@ -1,0 +1,53 @@
+(set-logic NRA)
+
+(define-fun max ((l Real) (u Real)) Real (ite (> l u) l u))
+(define-fun min ((l Real) (u Real)) Real (ite (> l u) u l))
+
+; Transformers we want to search
+(define-fun f ((x Real)) Real (ite (< x 0) (- x) x)) ; Problem 1
+;(define-fun f ((x Real)) Real (* x (* x x))) ; Problem 2
+;(define-fun f ((x Real)) Real (- x (abs x))) ; Problem 3
+;(define-fun f ((x Real)) Real (min (+ x (abs x)) (- x (abs x)))); Problem 4
+;(define-fun f ((x Real)) Real (max (* x x) (* x (* x x)))) ; Problem 5
+
+
+(synth-fun Tf_lower ((l Real) (u Real)) Real
+  ((Temp Real) (TempBool Bool))
+  ((Temp Real (0 l u
+               (- Temp Temp)
+	       (+ Temp Temp)
+		(* Temp Temp)
+               (max Temp Temp)
+	       (min Temp Temp)
+               (f Temp)
+               (ite TempBool Temp Temp)))
+   (TempBool Bool ((< Temp Temp)
+                    (> Temp Temp)
+                    )))
+)
+(synth-fun Tf_upper ((l Real) (u Real)) Real
+  ((Temp Real) (TempBool Bool))
+  ((Temp Real (0 l u
+               (- Temp Temp)
+	       (+ Temp Temp)
+		(* Temp Temp)
+               (max Temp Temp)
+	       (min Temp Temp)
+               (f Temp)
+               (ite TempBool Temp Temp)))
+   (TempBool Bool ((< Temp Temp)
+                    (> Temp Temp)
+                    )))
+)
+
+(declare-var x Real)
+(declare-var l Real)
+(declare-var u Real)
+
+
+; Transformer we need to verify
+(constraint (=>  
+    (and (<= l x) (<= x u))
+    (and (<= (Tf_lower l u) (f x)) (<= (f x) (Tf_upper l u)))
+))
+(check-synth)

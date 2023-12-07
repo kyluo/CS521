@@ -28,3 +28,6 @@
 (assert (not (= x y)))
 (check-sat)
 (pop) ; remove the assertions
+
+; I manually assign values to the variable as the body of the loop and change values accordingly for each iteration
+; remove assertion that cause the program to return unsat if encounter one and keep continuing the loop
